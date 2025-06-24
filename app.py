@@ -47,15 +47,6 @@ model_x = Qwen2_5_VLForConditionalGeneration.from_pretrained(
     torch_dtype=torch.float16
 ).to(device).eval()
 
-# Load olmOCR-7B-0225-preview
-MODEL_ID_O = "allenai/olmOCR-7B-0225-preview"
-processor_o = AutoProcessor.from_pretrained(MODEL_ID_O, trust_remote_code=True)
-model_o = Qwen2VLForConditionalGeneration.from_pretrained(
-    MODEL_ID_O,
-    trust_remote_code=True,
-    torch_dtype=torch.float16
-).to(device).eval()
-
 def downsample_video(video_path):
     """
     Downsamples the video to evenly spaced frames.
@@ -93,9 +84,6 @@ def generate_image(model_name: str, text: str, image: Image.Image,
     elif model_name == "DREX-062225-exp":
         processor = processor_x
         model = model_x
-    elif model_name == "olmOCR-7B-0225":
-        processor = processor_o
-        model = model_o
     else:
         yield "Invalid model selected.", "Invalid model selected."
         return
@@ -146,9 +134,6 @@ def generate_video(model_name: str, text: str, video_path: str,
     elif model_name == "DREX-062225-exp":
         processor = processor_x
         model = model_x
-    elif model_name == "olmOCR-7B-0225":
-        processor = processor_o
-        model = model_o
     else:
         yield "Invalid model selected.", "Invalid model selected."
         return
@@ -260,7 +245,7 @@ with gr.Blocks(css=css, theme="bethecloud/storj_theme") as demo:
                 markdown_output = gr.Markdown(label="Formatted Result (Result.Md)")
 
             model_choice = gr.Radio(
-                choices=["DREX-062225-exp", "VIREX-062225-exp", "olmOCR-7B-0225"],
+                choices=["DREX-062225-exp", "VIREX-062225-exp"],
                 label="Select Model",
                 value="DREX-062225-exp"
             )
@@ -268,8 +253,7 @@ with gr.Blocks(css=css, theme="bethecloud/storj_theme") as demo:
             gr.Markdown("**Model Info 💻** | [Report Bug](https://huggingface.co/spaces/prithivMLmods/Doc-VLMs/discussions)")
             gr.Markdown("> [DREX-062225-exp](https://huggingface.co/prithivMLmods/DREX-062225-exp): the drex-062225-exp (document retrieval and extraction expert) model is a specialized fine-tuned version of docscopeocr-7b-050425-exp, optimized for document retrieval, content extraction, and analysis recognition. built on top of the qwen2.5-vl architecture.")
             gr.Markdown("> [VIREX-062225-exp](https://huggingface.co/prithivMLmods/VIREX-062225-exp): the virex-062225-exp (video information retrieval and extraction expert - experimental) model is a fine-tuned version of qwen2.5-vl-7b-instruct, specifically optimized for advanced video understanding, image comprehension, sense of reasoning, and natural language decision-making through cot reasoning.")
-            gr.Markdown("> [olmOCR-7B-0225](https://huggingface.co/allenai/olmOCR-7B-0225-preview): the olmocr-7b-0225-preview model is based on qwen2-vl-7b, optimized for document-level optical character recognition (ocr), long-context vision-language understanding, and accurate image-to-text conversion with mathematical latex formatting. designed with a focus on high-fidelity visual-textual comprehension.")
-
+            
     image_submit.click(
         fn=generate_image,
         inputs=[model_choice, image_query, image_upload, max_new_tokens, temperature, top_p, top_k, repetition_penalty],
