@@ -4,8 +4,8 @@
 > The **DREX-062225-exp** (**Document Retrieval and Extraction eXpert**) model is a specialized fine-tuned version of **docscopeOCR-7B-050425-exp**, optimized for **Document Retrieval**, **Content Extraction**, and **Analysis Recognition**. Built on top of the Qwen2.5-VL architecture, this model enhances document comprehension capabilities with focused training on the Opendoc2-Analysis-Recognition dataset for superior document analysis and information extraction tasks.
 
 
-> [!note]
-DREX: Document Retrieval and Extraction eXpert [ experimental ]
+> [!important]
+> DREX: Document Retrieval and Extraction eXpert [ experimental ]
 
 # Key Enhancements
 
